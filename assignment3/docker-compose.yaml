@@ -3,13 +3,13 @@ services:
     image: postgres:latest
     networks:
       - please_work
-    container_name: database1
+    container_name: postgres_db1
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME_1}
     volumes:
-      - ./01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./db1:/docker-entrypoint-initdb.d
     ports:
       - "${DB_PORT_1}:5432"
 
@@ -17,13 +17,13 @@ services:
     image: postgres:latest
     networks:
       - please_work
-    container_name: database2
+    container_name: postgres_db2
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME_2}
     volumes:
-      - ./01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./db2:/docker-entrypoint-initdb.d
     ports:
       - "${DB_PORT_2}:5432"
 
@@ -31,13 +31,13 @@ services:
     image: postgres:latest
     networks:
       - please_work
-    container_name: database3
+    container_name: postgres_db3
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME_3}
     volumes:
-      - ./01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./db3:/docker-entrypoint-initdb.d
     ports:
       - "${DB_PORT_3}:5432"
 
@@ -55,6 +55,22 @@ services:
       - postgres_db1
       - postgres_db2
       - postgres_db3
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres_db1
+      - postgres_db2
+      - postgres_db3
+    networks:
+      - please_work
 
 networks:
   please_work:
