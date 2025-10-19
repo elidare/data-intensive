@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
@@ -12,10 +13,6 @@ pswd = os.getenv('DB_PASSWORD')
 dbname_1 = os.getenv('DB_NAME_1')
 dbname_2 = os.getenv('DB_NAME_2')
 dbname_3 = os.getenv('DB_NAME_3')
-# dbport_1 = os.getenv('DB_PORT_1')
-# dbport_2 = os.getenv('DB_PORT_2')
-# dbport_3 = os.getenv('DB_PORT_3')
-# hostname = "localhost"  # service_name
 hostname_1 = os.getenv('HOSTNAME_1')
 hostname_2 = os.getenv('HOSTNAME_2')
 hostname_3 = os.getenv('HOSTNAME_3')
@@ -38,11 +35,20 @@ while True:
     except Exception as e:
         print(f"Error in connecting to database: {str(e)}")
 
-# Select database function - frontend ?
+# TODO Select database function - frontend1 ?
 # print all results from tables
 # make a nice print of joins of results
 # update each table
 # reset data
+
+# Allow CORS - todo might be deleted after copying static
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Database methods
