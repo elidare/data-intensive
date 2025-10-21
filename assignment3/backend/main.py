@@ -35,11 +35,6 @@ while True:
     except Exception as e:
         print(f"Error in connecting to database: {str(e)}")
 
-# TODO Select database function - frontend1 ?
-# print all results from tables
-# make a nice print of joins of results
-# update each table
-# reset data
 
 # Allow CORS - todo might be deleted after copying static
 app.add_middleware(
@@ -84,12 +79,13 @@ def get_races_data(database):
 
 def get_results_data(database):
     cursor = database.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("SELECT rt.result_id, r.date, t.track_name, t.country,"
-                   "rt.position, d.first_name, d.last_name, rt.points\n"
+    cursor.execute("SELECT r.date, t.track_name, rt.position,"
+                   "d.first_name, d.last_name, tm.team_name, rt.points\n"
                    "FROM results rt\n"
                    "JOIN races r ON r.race_id = rt.race_id\n"
                    "JOIN tracks t ON r.track_id = t.track_id\n"
-                   "JOIN drivers d ON d.driver_id = rt.driver_id;")
+                   "JOIN drivers d ON d.driver_id = rt.driver_id\n"
+                   "JOIN teams tm ON d.team_id = tm.team_id;")
     record = cursor.fetchall()
     return record
 
