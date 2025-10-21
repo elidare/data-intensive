@@ -9,7 +9,7 @@ INSERT INTO teams (team_name, base_country, principal) VALUES
 ('Alfa Romeo Racing', 'Switzerland', 'Alessandro Alunni Bravi'),
 ('AlphaTauri', 'Italy', 'Franz Tost'),
 ('HRT', 'Spain', 'Luis Pérez-Sala'),
-('Jaguar', 'Spain', 'Ian James');
+('Jaguar', 'United Kingdom', 'Ian James');
 
 INSERT INTO drivers (first_name, last_name, nationality, team_id) VALUES
 ('Charles', 'Leclerc', 'Monaco', 1),
