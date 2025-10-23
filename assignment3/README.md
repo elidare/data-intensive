@@ -9,8 +9,8 @@ http://localhost:8000/api/teams?database=database2
 http://localhost:8000/api/teams?database=database3
 
 todo:
-- static to fastapi
-- updates to api
+- updates to api - finish
 - updates to frontend
+- static to fastapi
 - reset db
 - delete pgadmin

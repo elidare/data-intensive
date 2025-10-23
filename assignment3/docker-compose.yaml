@@ -41,21 +41,6 @@ services:
     ports:
       - "${DB_PORT_3}:5432"
 
-  pgadmin:
-    image: dpage/pgadmin4
-    networks:
-      - please_work
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres_db1
-      - postgres_db2
-      - postgres_db3
-
   backend:
     container_name: backend
     build:
