@@ -81,7 +81,21 @@ def get_drivers_data(database):
     return record
 
 
-# todo add updates for driver and track
+def update_drivers_data(database, driver_id, update_dict):
+    columns_update = []
+    for k, v in update_dict.items():
+        columns_update.append(f"{k} = '{v}'")
+    if not len(columns_update):
+        raise HTTPException(status_code=400, detail="Specify data to update")
+
+    cursor = database.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"UPDATE drivers SET {','.join(columns_update)} WHERE driver_id = {driver_id};")
+    database.commit()
+    cursor.execute(f"SELECT * FROM drivers WHERE driver_id = {driver_id}")
+    updated_record = cursor.fetchone()
+    cursor.close()
+    return updated_record
+
 
 def get_tracks_data(database):
     cursor = database.cursor(cursor_factory=RealDictCursor)
@@ -91,11 +105,27 @@ def get_tracks_data(database):
     return record
 
 
+def update_tracks_data(database, track_id, update_dict):
+    columns_update = []
+    for k, v in update_dict.items():
+        columns_update.append(f"{k} = '{v}'")
+    if not len(columns_update):
+        raise HTTPException(status_code=400, detail="Specify data to update")
+
+    cursor = database.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"UPDATE tracks SET {','.join(columns_update)} WHERE track_id = {track_id};")
+    database.commit()
+    cursor.execute(f"SELECT * FROM tracks WHERE track_id = {track_id}")
+    updated_record = cursor.fetchone()
+    cursor.close()
+    return updated_record
+
+
 def get_races_data(database):
     cursor = database.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT r.race_id, r.date, t.track_name, d.first_name, d.last_name FROM races r\n"
                    "JOIN tracks t ON t.track_id = r.track_id\n"
-                   "JOIN drivers d ON d.driver_id = r.winner_driver_id"
+                   "JOIN drivers d ON d.driver_id = r.winner_driver_id\n"
                    "ORDER BY r.race_id;")
     record = cursor.fetchall()
     cursor.close()
@@ -110,7 +140,7 @@ def get_results_data(database):
                    "JOIN races r ON r.race_id = rt.race_id\n"
                    "JOIN tracks t ON r.track_id = t.track_id\n"
                    "JOIN drivers d ON d.driver_id = rt.driver_id\n"
-                   "JOIN teams tm ON d.team_id = tm.team_id"
+                   "JOIN teams tm ON d.team_id = tm.team_id\n"
                    "ORDER BY rt.result_id;")
     record = cursor.fetchall()
     cursor.close()
@@ -143,10 +173,24 @@ def get_drivers(database: str):
     return get_drivers_data(db)
 
 
+@app.patch("/api/drivers/{driver_id}")
+def update_drivers(driver_id: int, database: str, updates: DriverUpdate):
+    update_dict = updates.model_dump(exclude_unset=True)
+    db = get_database(database)
+    return update_drivers_data(db, driver_id, update_dict)
+
+
 @app.get("/api/tracks")
 def get_tracks(database: str):
     db = get_database(database)
     return get_tracks_data(db)
+
+
+@app.patch("/api/tracks/{track_id}")
+def update_tracks(track_id: int, database: str, updates: TrackUpdate):
+    update_dict = updates.model_dump(exclude_unset=True)
+    db = get_database(database)
+    return update_tracks_data(db, track_id, update_dict)
 
 
 @app.get("/api/races")
