@@ -1,5 +1,3 @@
-http://localhost:5050/browser/ - pgadmin
-
 `docker-compose -f docker-compose.yaml up -d`
 `docker-compose -f docker-compose.yaml up -d --build`
 The Formula-1 data is imaginary because the databases shall be different.
@@ -9,8 +7,7 @@ http://localhost:8000/api/teams?database=database2
 http://localhost:8000/api/teams?database=database3
 
 todo:
-- updates to api - finish
-- updates to frontend
+- test frontend
 - static to fastapi
 - reset db
-- delete pgadmin
+- fix indentation
