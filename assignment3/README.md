@@ -19,6 +19,8 @@ docker-compose -f docker-compose.yaml up -d --build
 
 The app will be available at http://localhost:8000/.
 
+To shut down, run `docker-compose down`.
+
 To reset the databases to the initial state, run `./reset.sh`.
 
 To access the databases through docker, you can use
