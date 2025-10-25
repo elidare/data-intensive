@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:8000/api'  // TODO
+const baseUrl = '/api'
 
 const getTeams = (database) => {
     const request = axios.get(`${baseUrl}/teams?database=${database}`)

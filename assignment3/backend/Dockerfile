@@ -6,11 +6,14 @@ RUN apt-get update
 WORKDIR /app
 
 # Install dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app
-COPY . ./
+COPY backend ./
+
+# Copy React build
+COPY frontend/dist ./frontend/dist
 
 WORKDIR /app/
 

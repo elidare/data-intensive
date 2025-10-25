@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import psycopg2
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
@@ -17,7 +17,7 @@ dbname_2 = os.getenv("DB_NAME_2")
 dbname_3 = os.getenv("DB_NAME_3")
 hostname_1 = os.getenv("HOSTNAME_1")
 hostname_2 = os.getenv("HOSTNAME_2")
-hostname_3 = os.getenv("HOSTNAME_3")   # Matteo Binotto
+hostname_3 = os.getenv("HOSTNAME_3")
 
 databases = {}
 
@@ -36,16 +36,6 @@ while True:
             break
     except Exception as e:
         print(f"Error in connecting to database: {str(e)}")
-
-
-# Allow CORS - todo might be deleted after copying static
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 # Database methods
@@ -203,3 +193,7 @@ def get_races(database: str):
 def get_results(database: str):
     db = get_database(database)
     return get_results_data(db)
+
+
+# Frontend
+app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend")

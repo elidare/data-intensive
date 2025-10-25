@@ -7,7 +7,5 @@ http://localhost:8000/api/teams?database=database2
 http://localhost:8000/api/teams?database=database3
 
 todo:
-- test frontend
-- static to fastapi
 - reset db
 - fix indentation
