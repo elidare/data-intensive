@@ -13,7 +13,7 @@ and that was a quick way to make different data.
 Clone the repo and run docker-compose building the images
 ```
 git clone git@github.com:elidare/data-intensive.git
-cd assignment3
+cd data-intensive/assignment3/
 docker-compose -f docker-compose.yaml up -d --build
 ```
 
