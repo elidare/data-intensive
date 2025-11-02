@@ -22,15 +22,18 @@ databases = {}
 
 while True:
     try:
-        postgres_database = psycopg2.connect(database=dbname_postgres, user=username, password=pswd, host=hostname_postgres, port=5432)
+        # postgres_database = psycopg2.connect(database=dbname_postgres, user=username, password=pswd, host=hostname_postgres, port=5432)
         mongo_connection = pymongo.MongoClient(f"mongodb://{hostname_mongo}:27017")
         mongo_database = mongo_connection[dbname_mongo]
-        if postgres_database and mongo_database:
-            print("=== Successfully connected to all the databases! ===")
-            databases = {
-                "postgres_database": postgres_database,
-                "mongo_database": mongo_database,
-            }
+        # if postgres_database and mongo_database is not None:
+        #     print("=== Successfully connected to all the databases! ===")
+        #     databases = {
+        #         "postgres_database": postgres_database,
+        #         "mongo_database": mongo_database,
+        #     }
+        #     break
+
+        if mongo_database is not None:
             break
     except Exception as e:
         print(f"Error in connecting to database: {str(e)}")
