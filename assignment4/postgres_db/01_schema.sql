@@ -7,8 +7,7 @@ CREATE TABLE teams (
 
 CREATE TABLE drivers (
   driver_id SERIAL PRIMARY KEY,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
+  full_name VARCHAR(50),
   nationality VARCHAR(50),
   team_id INT REFERENCES teams(team_id)
 );

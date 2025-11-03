@@ -6,7 +6,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
 from dotenv import load_dotenv
-from classes import TeamUpdate, DriverUpdate, TrackUpdate, split_update_teams_data
+from classes import (TeamUpdate, DriverUpdate, TrackUpdate,
+                     split_update_teams_data, split_update_drivers_data, split_update_tracks_data)
 
 
 load_dotenv()
@@ -47,7 +48,7 @@ def get_postgres_data(table, table_id_name):
 
 
 def get_mongo_data(entity_list, entity_id_name):
-    mongo_data = list(mongo_database[entity_list].find({}, {"_id": 0, "full_name": 0, "track": 0}))
+    mongo_data = list(mongo_database[entity_list].find({}, {"_id": 0, "full_name": 0, "track_name": 0}))
     return {d[entity_id_name]: d for d in mongo_data}
 
 
@@ -64,16 +65,14 @@ def get_combined_data(entity_list, entity_id_name):
 
 # Update data in similar tables/collections: teams, drivers, tracks
 def update_postgres_data(table, table_id_name, entity_id, update_dict):
-    if not (len(update_dict.keys())):
-        return {}
-
     columns_update = []
     for k, v in update_dict.items():
         columns_update.append(f"{k} = '{v}'")
 
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
-    cursor.execute(f"UPDATE {table} SET {','.join(columns_update)} WHERE {table_id_name} = {entity_id};")
-    postgres_database.commit()
+    if len(columns_update):
+        cursor.execute(f"UPDATE {table} SET {','.join(columns_update)} WHERE {table_id_name} = {entity_id};")
+        postgres_database.commit()
     cursor.execute(f"SELECT * FROM {table} WHERE {table_id_name} = {entity_id}")
     updated_record = cursor.fetchone()
     cursor.close()
@@ -81,6 +80,11 @@ def update_postgres_data(table, table_id_name, entity_id, update_dict):
 
 
 def update_mongo_data(entity_list, entity_id_name, entity_id, update_dict):
+    if not (len(update_dict.keys())):
+        return mongo_database[entity_list].find_one(
+            {entity_id_name: entity_id},
+            {"_id": 0, "full_name": 0, "track_name": 0}
+        )
     result = mongo_database[entity_list].find_one_and_update(
         {entity_id_name: entity_id},
         {"$set": update_dict},
@@ -97,43 +101,27 @@ def update_teams_data(team_id, update_dict):
     merged = {**updated_postgres, **updated_mongo}
     return merged
 
-#
-# def update_drivers_data(database, driver_id, update_dict):
-#     columns_update = []
-#     for k, v in update_dict.items():
-#         columns_update.append(f"{k} = '{v}'")
-#     if not len(columns_update):
-#         raise HTTPException(status_code=400, detail="Specify data to update")
-#
-#     cursor = database.cursor(cursor_factory=RealDictCursor)
-#     cursor.execute(f"UPDATE drivers SET {','.join(columns_update)} WHERE driver_id = {driver_id};")
-#     database.commit()
-#     cursor.execute(f"SELECT * FROM drivers WHERE driver_id = {driver_id}")
-#     updated_record = cursor.fetchone()
-#     cursor.close()
-#     return updated_record
-#
-#
-# def update_tracks_data(database, track_id, update_dict):
-#     columns_update = []
-#     for k, v in update_dict.items():
-#         columns_update.append(f"{k} = '{v}'")
-#     if not len(columns_update):
-#         raise HTTPException(status_code=400, detail="Specify data to update")
-#
-#     cursor = database.cursor(cursor_factory=RealDictCursor)
-#     cursor.execute(f"UPDATE tracks SET {','.join(columns_update)} WHERE track_id = {track_id};")
-#     database.commit()
-#     cursor.execute(f"SELECT * FROM tracks WHERE track_id = {track_id}")
-#     updated_record = cursor.fetchone()
-#     cursor.close()
-#     return updated_record
+
+def update_drivers_data(driver_id, update_dict):
+    mongo_data, postgres_data = split_update_drivers_data(update_dict)
+    updated_postgres = update_postgres_data("drivers", "driver_id", driver_id, postgres_data)
+    updated_mongo = update_mongo_data("drivers", "driver_id", driver_id, mongo_data)
+    merged = {**updated_postgres, **updated_mongo}
+    return merged
+
+
+def update_tracks_data(track_id, update_dict):
+    mongo_data, postgres_data = split_update_tracks_data(update_dict)
+    updated_postgres = update_postgres_data("tracks", "track_id", track_id, postgres_data)
+    updated_mongo = update_mongo_data("tracks", "track_id", track_id, mongo_data)
+    merged = {**updated_postgres, **updated_mongo}
+    return merged
 
 
 # Get only postgres data
 def get_races_data():
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("SELECT r.race_id, r.date, t.track_name, d.first_name, d.last_name FROM races r\n"
+    cursor.execute("SELECT r.race_id, r.date, t.track_name, d.full_name FROM races r\n"
                    "JOIN tracks t ON t.track_id = r.track_id\n"
                    "JOIN drivers d ON d.driver_id = r.winner_driver_id\n"
                    "ORDER BY r.race_id;")
@@ -145,7 +133,7 @@ def get_races_data():
 def get_results_data():
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT r.date, t.track_name, rt.position,"
-                   "d.first_name, d.last_name, tm.team_name, rt.points\n"
+                   "d.full_name, tm.team_name, rt.points\n"
                    "FROM results rt\n"
                    "JOIN races r ON r.race_id = rt.race_id\n"
                    "JOIN tracks t ON r.track_id = t.track_id\n"
@@ -198,25 +186,23 @@ def update_teams(team_id: int, updates: TeamUpdate):
 @app.get("/api/drivers")
 def get_drivers():
     return get_combined_data("drivers", "driver_id")
-#
-#
-# @app.patch("/api/drivers/{driver_id}")
-# def update_drivers(driver_id: int, database: str, updates: DriverUpdate):
-#     update_dict = updates.model_dump(exclude_unset=True)
-#     db = get_database(database)
-#     return update_drivers_data(db, driver_id, update_dict)
+
+
+@app.patch("/api/drivers/{driver_id}")
+def update_drivers(driver_id: int, updates: DriverUpdate):
+    update_dict = updates.model_dump(exclude_unset=True)
+    return update_drivers_data(driver_id, update_dict)
 
 
 @app.get("/api/tracks")
 def get_tracks():
     return get_combined_data("tracks", "track_id")
-#
-#
-# @app.patch("/api/tracks/{track_id}")
-# def update_tracks(track_id: int, database: str, updates: TrackUpdate):
-#     update_dict = updates.model_dump(exclude_unset=True)
-#     db = get_database(database)
-#     return update_tracks_data(db, track_id, update_dict)
+
+
+@app.patch("/api/tracks/{track_id}")
+def update_tracks(track_id: int, updates: TrackUpdate):
+    update_dict = updates.model_dump(exclude_unset=True)
+    return update_tracks_data(track_id, update_dict)
 
 
 @app.get("/api/races")

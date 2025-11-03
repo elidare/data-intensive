@@ -43,81 +43,94 @@ db.teams.createIndex({ team_id: 1 });
 db.tracks.insertMany([
   {
     "track_id": 1,
-    "track": "Albert Park Circuit",
-    "geo": { "lat": -37.8497, "lng": 144.9680 },
-    "record_lap": { "driver": "Charles Leclerc", "time": "1:20.235", "year": 2024 }
+    "track_name": "Albert Park Circuit",
+    "lat": -37.8497,
+    "lng": 144.9680,
+    "record_lap_driver": "Charles Leclerc"
   },
   {
     "track_id": 2,
-    "track": "Silverstone Circuit",
-    "geo": { "lat": 52.0786, "lng": -1.0169 },
-    "record_lap": { "driver": "Max Verstappen", "time": "1:27.097", "year": 2020 }
+    "track_name": "Silverstone Circuit",
+    "lat": 52.0786,
+    "lng": -1.0169,
+    "record_lap_driver": "Max Verstappen"
   },
   {
     "track_id": 3,
-    "track": "Suzuka Circuit",
-    "geo": { "lat": 34.8431, "lng": 136.5410 },
-    "record_lap": { "driver": "Lewis Hamilton", "time": "1:30.983", "year": 2019 }
+    "track_name": "Suzuka Circuit",
+    "lat": 34.8431,
+    "lng": 136.5410,
+    "record_lap_driver": "Lewis Hamilton"
   },
   {
     "track_id": 4,
-    "track": "Bahrain International Circuit (Sakhir)",
-    "geo": { "lat": 26.0325, "lng": 50.5106 },
-    "record_lap": { "driver": "Pedro de la Rosa", "time": "1:31.447", "year": 2005 }
+    "track_name": "Bahrain International Circuit (Sakhir)",
+    "lat": 26.0325,
+    "lng": 50.5106,
+    "record_lap_driver": "Pedro de la Rosa"
   },
   {
     "track_id": 5,
-    "track": "Circuit de Spa-Francorchamps",
-    "geo": { "lat": 50.4372, "lng": 5.9714 },
-    "record_lap": { "driver": "Valtteri Bottas", "time": "1:46.286", "year": 2018 }
+    "track_name": "Circuit de Spa-Francorchamps",
+    "lat": 50.4372, 
+    "lng": 5.9714,
+    "record_lap_driver": "Valtteri Bottas"
   },
   {
     "track_id": 6,
-    "track": "Miami International Autodrome",
-    "geo": { "lat": 25.9580, "lng": -80.2389 },
-    "record_lap": { "driver": "Max Verstappen", "time": "1:29.708", "year": 2023 }
+    "track_name": "Miami International Autodrome",
+    "lat": 25.9580,
+    "lng": -80.2389,
+    "record_lap_driver": "Max Verstappen"
   },
   {
     "track_id": 7,
-    "track": "Autodromo Enzo e Dino Ferrari (Imola)",
-    "geo": { "lat": 44.3439, "lng": 11.7167 },
-    "record_lap": { "driver": "Lewis Hamilton", "time": "1:15.484", "year": 2020 }
+    "track_name": "Autodromo Enzo e Dino Ferrari (Imola)",
+    "lat": 44.3439,
+    "lng": 11.7167,
+    "record_lap_driver": "Lewis Hamilton"
   },
   {
     "track_id": 8,
-    "track": "Circuit de Monaco",
-    "geo": { "lat": 43.7347, "lng": 7.4206 },
-    "record_lap": { "driver": "Lewis Hamilton", "time": "1:12.909", "year": 2021 }
+    "track_name": "Circuit de Monaco",
+    "lat": 43.7347,
+    "lng": 7.4206,
+    "record_lap_driver": "Lewis Hamilton"
   },
   {
     "track_id": 9,
-    "track": "Circuit de Barcelona-Catalunya",
-    "geo": { "lat": 41.5700, "lng": 2.2610 },
-    "record_lap": { "driver": "Max Verstappen", "time": "1:18.149", "year": 2023 }
+    "track_name": "Circuit de Barcelona-Catalunya",
+    "lat": 41.5700,
+    "lng": 2.2610,
+    "record_lap_driver": "Max Verstappen"
   },
   {
     "track_id": 10,
-    "track": "Circuit Gilles Villeneuve",
-    "geo": { "lat": 45.5048, "lng": -73.5227 },
-    "record_lap": { "driver": "Valtteri Bottas", "time": "1:13.078", "year": 2019 }
+    "track_name": "Circuit Gilles Villeneuve",
+    "lat": 45.5048,
+    "lng": -73.5227,
+    "record_lap_driver": "Valtteri Bottas"
   },
   {
     "track_id": 11,
-    "track": "Red Bull Ring",
-    "geo": { "lat": 47.2197, "lng": 14.7647 },
-    "record_lap": { "driver": "Carlos Sainz", "time": "1:05.619", "year": 2020 }
+    "track_name": "Red Bull Ring",
+    "lat": 47.2197,
+    "lng": 14.7647,
+    "record_lap_driver": "Carlos Sainz"
   },
   {
     "track_id": 12,
-    "track": "Shanghai International Circuit",
-    "geo": { "lat": 31.3389, "lng": 121.2197 },
-    "record_lap": { "driver": "Michael Schumacher", "time": "1:32.238", "year": 2004 }
+    "track_name": "Shanghai International Circuit",
+    "lat": 31.3389,
+    "lng": 121.2197,
+    "record_lap_driver": "Michael Schumacher"
   },
   {
     "track_id": 13,
-    "track": "Jeddah Corniche Circuit",
-    "geo": { "lat": 21.6319, "lng": 39.1044 },
-    "record_lap": { "driver": "Lewis Hamilton", "time": "1:30.734", "year": 2021 }
+    "track_name": "Jeddah Corniche Circuit",
+    "lat": 21.6319,
+    "lng": 39.1044,
+    "record_lap_driver": "Lewis Hamilton"
   }
 ]);
 

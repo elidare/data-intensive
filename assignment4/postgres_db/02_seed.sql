@@ -10,27 +10,27 @@ INSERT INTO teams (team_name, base_country, principal) VALUES
 ('MoneyGram Haas F1 Team', 'United States', 'Ayao Komatsu'),
 ('BWT Alpine Formula One Team', 'United Kingdom', 'Flavio Briatore');
 
-INSERT INTO drivers (first_name, last_name, nationality, team_id) VALUES
-('Charles', 'Leclerc', 'Monaco', 1),
-('Lewis', 'Hamilton', 'Great Britain', 1),
-('Lando', 'Norris', 'Great Britain', 2),
-('Oscar', 'Piastri', 'Australia', 2),
-('George', 'Russell', 'Great Britain', 3),
-('Andrea Kimi', 'Antonelli', 'Italy', 3),
-('Max', 'Verstappen', 'Netherlands', 4),
-('Yuki', 'Tsunoda', 'Japan', 4),
-('Alex', 'Albon', 'Thailand', 5),
-('Carlos', 'Sainz', 'Spain', 5),
-('Liam', 'Lawson', 'New Zealand', 6),
-('Isack', 'Hadjar', 'France', 6),
-('Fernando', 'Alonso', 'Spain', 7),
-('Lance', 'Stroll', 'Canada', 7),
-('Nico', 'Hülkenberg', 'Germany', 8),
-('Gabriel', 'Bortoleto', 'Brazil', 8),
-('Oliver', 'Bearman', 'Great Britain', 9),
-('Esteban', 'Ocon', 'France', 9),
-('Pierre', 'Gasly', 'France', 10),
-('Jack', 'Doohan', 'Australia', 10);
+INSERT INTO drivers (full_name, nationality, team_id) VALUES
+('Charles Leclerc', 'Monaco', 1),
+('Lewis Hamilton', 'Great Britain', 1),
+('Lando Norris', 'Great Britain', 2),
+('Oscar Piastri', 'Australia', 2),
+('George Russell', 'Great Britain', 3),
+('Andrea Kimi Antonelli', 'Italy', 3),
+('Max Verstappen', 'Netherlands', 4),
+('Yuki Tsunoda', 'Japan', 4),
+('Alex Albon', 'Thailand', 5),
+('Carlos Sainz', 'Spain', 5),
+('Liam Lawson', 'New Zealand', 6),
+('Isack Hadjar', 'France', 6),
+('Fernando Alonso', 'Spain', 7),
+('Lance Stroll', 'Canada', 7),
+('Nico Hülkenberg', 'Germany', 8),
+('Gabriel Bortoleto', 'Brazil', 8),
+('Oliver Bearman', 'Great Britain', 9),
+('Esteban Ocon', 'France', 9),
+('Pierre Gasly', 'France', 10),
+('Jack Doohan', 'Australia', 10);
 
 INSERT INTO tracks (track_name, location, country, length_km, laps) VALUES
 ('Albert Park Circuit', 'Melbourne, Victoria', 'Australia', 5.278, 58),
