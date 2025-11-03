@@ -26,16 +26,16 @@ db.drivers.insertMany([
 db.drivers.createIndex({ driver_id: 1 });
 
 db.teams.insertMany([
-  { "team_id": 1, "full_name": "Scuderia Ferrari HP", "staff_number": 1050, "championship_position": 2 },
-  { "team_id": 2, "full_name": "McLaren Formula 1 Team", "staff_number": 1000, "championship_position": 1 },
-  { "team_id": 3, "full_name": "Mercedes-AMG PETRONAS Formula One Team", "staff_number": 1200, "championship_position": 3 },
-  { "team_id": 4, "full_name": "Oracle Red Bull Racing", "staff_number": 1000, "championship_position": 4 },
-  { "team_id": 5, "full_name": "Atlassian Williams Racing", "staff_number": 1200, "championship_position": 5 },
-  { "team_id": 6, "full_name": "Visa Cash App Racing Bulls Formula One Team", "staff_number": 800, "championship_position": 6 },
-  { "team_id": 7, "full_name": "Aston Martin Aramco Formula One Team", "staff_number": 1000, "championship_position": 7 },
-  { "team_id": 8, "full_name": "Stake F1 Team Kick Sauber", "staff_number": 750, "championship_position": 8 },
-  { "team_id": 9, "full_name": "MoneyGram Haas F1 Team", "staff_number": 350, "championship_position": 9 },
-  { "team_id": 10, "full_name": "BWT Alpine Formula One Team", "staff_number": 1000, "championship_position": 10 }
+  { "team_id": 1, "team_name": "Scuderia Ferrari HP", "staff_number": 1050, "championship_position": 2 },
+  { "team_id": 2, "team_name": "McLaren Formula 1 Team", "staff_number": 1000, "championship_position": 1 },
+  { "team_id": 3, "team_name": "Mercedes-AMG PETRONAS Formula One Team", "staff_number": 1200, "championship_position": 3 },
+  { "team_id": 4, "team_name": "Oracle Red Bull Racing", "staff_number": 1000, "championship_position": 4 },
+  { "team_id": 5, "team_name": "Atlassian Williams Racing", "staff_number": 1200, "championship_position": 5 },
+  { "team_id": 6, "team_name": "Visa Cash App Racing Bulls Formula One Team", "staff_number": 800, "championship_position": 6 },
+  { "team_id": 7, "team_name": "Aston Martin Aramco Formula One Team", "staff_number": 1000, "championship_position": 7 },
+  { "team_id": 8, "team_name": "Stake F1 Team Kick Sauber", "staff_number": 750, "championship_position": 8 },
+  { "team_id": 9, "team_name": "MoneyGram Haas F1 Team", "staff_number": 350, "championship_position": 9 },
+  { "team_id": 10, "team_name": "BWT Alpine Formula One Team", "staff_number": 1000, "championship_position": 10 }
 ]);
 
 db.teams.createIndex({ team_id: 1 });

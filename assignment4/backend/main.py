@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 import pymongo
+from pymongo import ReturnDocument
 import psycopg2
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
 from dotenv import load_dotenv
-from classes import TeamUpdate, DriverUpdate, TrackUpdate
+from classes import TeamUpdate, DriverUpdate, TrackUpdate, split_update_teams_data
 
 
 load_dotenv()
@@ -36,45 +37,65 @@ while True:
         print(f"Error in connecting to database: {str(e)}")
 
 
-# For similar tables/collections: teams, drivers, tracks
-def get_postgres_data(table, similar_id):
+# Get data from similar tables/collections: teams, drivers, tracks
+def get_postgres_data(table, table_id_name):
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
-    cursor.execute(f"SELECT * FROM {table} ORDER BY {similar_id};")
+    cursor.execute(f"SELECT * FROM {table} ORDER BY {table_id_name};")
     records = cursor.fetchall()
     cursor.close()
     return [dict(row) for row in records]
 
 
-def get_mongo_data(collection, similar_id):
-    mongo_data = list(mongo_database[collection].find({}, {"_id": 0, "full_name": 0, "track": 0}))
-    return {team[similar_id]: team for team in mongo_data}
+def get_mongo_data(entity_list, entity_id_name):
+    mongo_data = list(mongo_database[entity_list].find({}, {"_id": 0, "full_name": 0, "track": 0}))
+    return {d[entity_id_name]: d for d in mongo_data}
 
 
-def get_combined_data(entity_list, entity_id):
-    postgres_data = get_postgres_data(entity_list, entity_id)
-    mongo_dict = get_mongo_data(entity_list, entity_id)
+# Get combined data from similar tables/collections: teams, drivers, tracks
+def get_combined_data(entity_list, entity_id_name):
+    postgres_data = get_postgres_data(entity_list, entity_id_name)
+    mongo_dict = get_mongo_data(entity_list, entity_id_name)
     merged_list = [
-        {**pg, **mongo_dict.get(pg[entity_id], {})}
+        {**pg, **mongo_dict.get(pg[entity_id_name], {})}
         for pg in postgres_data
     ]
     return merged_list
 
-#
-#
-# def update_teams_data(database, team_id, update_dict):
-#     columns_update = []
-#     for k, v in update_dict.items():
-#         columns_update.append(f"{k} = '{v}'")
-#     if not len(columns_update):
-#         raise HTTPException(status_code=400, detail="Specify data to update")
-#
-#     cursor = database.cursor(cursor_factory=RealDictCursor)
-#     cursor.execute(f"UPDATE teams SET {','.join(columns_update)} WHERE team_id = {team_id};")
-#     database.commit()
-#     cursor.execute(f"SELECT * FROM teams WHERE team_id = {team_id}")
-#     updated_record = cursor.fetchone()
-#     cursor.close()
-#     return updated_record
+
+# Update data in similar tables/collections: teams, drivers, tracks
+def update_postgres_data(table, table_id_name, entity_id, update_dict):
+    if not (len(update_dict.keys())):
+        return {}
+
+    columns_update = []
+    for k, v in update_dict.items():
+        columns_update.append(f"{k} = '{v}'")
+
+    cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"UPDATE {table} SET {','.join(columns_update)} WHERE {table_id_name} = {entity_id};")
+    postgres_database.commit()
+    cursor.execute(f"SELECT * FROM {table} WHERE {table_id_name} = {entity_id}")
+    updated_record = cursor.fetchone()
+    cursor.close()
+    return updated_record
+
+
+def update_mongo_data(entity_list, entity_id_name, entity_id, update_dict):
+    result = mongo_database[entity_list].find_one_and_update(
+        {entity_id_name: entity_id},
+        {"$set": update_dict},
+        return_document=ReturnDocument.AFTER,
+        projection={"_id": 0}
+    )
+    return result
+
+
+def update_teams_data(team_id, update_dict):
+    mongo_data, postgres_data = split_update_teams_data(update_dict)
+    updated_postgres = update_postgres_data("teams", "team_id", team_id, postgres_data)
+    updated_mongo = update_mongo_data("teams", "team_id", team_id, mongo_data)
+    merged = {**updated_postgres, **updated_mongo}
+    return merged
 
 #
 # def update_drivers_data(database, driver_id, update_dict):
@@ -155,20 +176,23 @@ def get_team_stats_data():
     merged = []
     for stat in team_stats:
         team = team_lookup.get(stat["team_id"], {})
-        merged.append({**stat, "full_name": team["full_name"]})
+        merged.append({**stat, "team_name": team["team_name"]})
     return merged
 
+
+# Insert into postgres data
+# Insert into mongo data
+# Delete combined data from postgres/mongo
 
 @app.get("/api/teams")
 def get_teams():
     return get_combined_data("teams", "team_id")
-#
-#
-# @app.patch("/api/teams/{team_id}")
-# def update_teams(team_id: int, database: str, updates: TeamUpdate):
-#     update_dict = updates.model_dump(exclude_unset=True)
-#     db = get_database(database)
-#     return update_teams_data(db, team_id, update_dict)
+
+
+@app.patch("/api/teams/{team_id}")
+def update_teams(team_id: int, updates: TeamUpdate):
+    update_dict = updates.model_dump(exclude_unset=True)
+    return update_teams_data(team_id, update_dict)
 
 
 @app.get("/api/drivers")
