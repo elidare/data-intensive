@@ -137,6 +137,26 @@ def get_results_data():
 
 
 # Get only mongo db data
+def get_driver_stats_data():
+    drivers = list(mongo_database.drivers.find({}, {"_id": 0}))
+    driver_stats = list(mongo_database.driver_stats.find({}, {"_id": 0}))
+    driver_lookup = {d["driver_id"]: d for d in drivers}
+    merged = []
+    for stat in driver_stats:
+        driver = driver_lookup.get(stat["driver_id"], {})
+        merged.append({**stat, "full_name": driver["full_name"]})
+    return merged
+
+
+def get_team_stats_data():
+    teams = list(mongo_database.teams.find({}, {"_id": 0}))
+    team_stats = list(mongo_database.team_stats.find({}, {"_id": 0}))
+    team_lookup = {d["team_id"]: d for d in teams}
+    merged = []
+    for stat in team_stats:
+        team = team_lookup.get(stat["team_id"], {})
+        merged.append({**stat, "full_name": team["full_name"]})
+    return merged
 
 
 @app.get("/api/teams")
@@ -183,6 +203,16 @@ def get_races():
 @app.get("/api/results")
 def get_results():
     return get_results_data()
+
+
+@app.get("/api/driver-stats")
+def get_driver_stats():
+    return get_driver_stats_data()
+
+
+@app.get("/api/team-stats")
+def get_team_stats():
+    return get_team_stats_data()
 
 
 # # Frontend

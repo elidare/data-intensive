@@ -25,7 +25,7 @@ db.drivers.insertMany([
 
 db.drivers.createIndex({ driver_id: 1 });
 
-let res3 = db.teams.insertMany([
+db.teams.insertMany([
   { "team_id": 1, "full_name": "Scuderia Ferrari HP", "staff_number": 1050, "championship_position": 2 },
   { "team_id": 2, "full_name": "McLaren Formula 1 Team", "staff_number": 1000, "championship_position": 1 },
   { "team_id": 3, "full_name": "Mercedes-AMG PETRONAS Formula One Team", "staff_number": 1200, "championship_position": 3 },
