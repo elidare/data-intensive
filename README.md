@@ -114,6 +114,9 @@ Uses docker, PostgreSQL, MongoDB, Fastapi (python), and React (Javascript).
 Data used is Formula-1 drivers and teams performing and tracks used through 2025.
 The races, results, driver stats, and team stats data is imaginary.
 
+Updates, inserts, and deletions are not made within one transaction so some ansynchronized data could appear.
+I omitted this part because it is a study assignment.
+
 ### Running
 
 ### Resources
