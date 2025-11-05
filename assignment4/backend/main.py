@@ -48,15 +48,15 @@ def get_postgres_data(table, table_id_name):
     return [dict(row) for row in records]
 
 
-def get_mongo_data(entity_list, entity_id_name):
-    mongo_data = list(mongo_database[entity_list].find({}, {"_id": 0, "full_name": 0, "track_name": 0}))
+def get_mongo_data(collection, entity_id_name):
+    mongo_data = list(mongo_database[collection].find({}, {"_id": 0, "full_name": 0, "track_name": 0}))
     return {d[entity_id_name]: d for d in mongo_data}
 
 
 # Get combined data from similar tables/collections: teams, drivers, tracks
-def get_combined_data(entity_list, entity_id_name):
-    postgres_data = get_postgres_data(entity_list, entity_id_name)
-    mongo_dict = get_mongo_data(entity_list, entity_id_name)
+def get_combined_data(collection, entity_id_name):
+    postgres_data = get_postgres_data(collection, entity_id_name)
+    mongo_dict = get_mongo_data(collection, entity_id_name)
     merged_list = [
         {**pg, **mongo_dict.get(pg[entity_id_name], {})}
         for pg in postgres_data
@@ -80,13 +80,13 @@ def update_postgres_data(table, table_id_name, entity_id, update_dict):
     return updated_record
 
 
-def update_mongo_data(entity_list, entity_id_name, entity_id, update_dict):
+def update_mongo_data(collection, entity_id_name, entity_id, update_dict):
     if not (len(update_dict.keys())):
-        return mongo_database[entity_list].find_one(
+        return mongo_database[collection].find_one(
             {entity_id_name: entity_id},
             {"_id": 0, "full_name": 0, "track_name": 0}
         )
-    result = mongo_database[entity_list].find_one_and_update(
+    result = mongo_database[collection].find_one_and_update(
         {entity_id_name: entity_id},
         {"$set": update_dict},
         return_document=ReturnDocument.AFTER,
@@ -185,8 +185,8 @@ def insert_postgres_data(table, create_dict):
 
 
 # Insert into mongo data
-def insert_mongo_data(entity_list, create_dict):
-    mongo_database[entity_list].insert_one(
+def insert_mongo_data(collection, create_dict):
+    mongo_database[collection].insert_one(
         dict(create_dict)
     )
     return create_dict
@@ -212,6 +212,7 @@ def insert_tracks_data(create_dict):
 
 
 # Delete combined data from postgres/mongo
+
 
 
 # Teams
