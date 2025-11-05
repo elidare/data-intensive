@@ -6,9 +6,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
 from dotenv import load_dotenv
-from classes import (TeamUpdate, DriverUpdate, TrackUpdate,
-                     split_update_teams_data, split_update_drivers_data, split_update_tracks_data)
-
+from classes import (TeamUpdate, DriverUpdate, TrackUpdate, TeamInsert, TrackInsert,
+                     split_update_teams_data, split_update_drivers_data, split_update_tracks_data,
+                     split_insert_teams_data, split_insert_tracks_data)
 
 load_dotenv()
 app = FastAPI(title="Racing Results API")
@@ -24,7 +24,8 @@ databases = {}
 
 while True:
     try:
-        postgres_database = psycopg2.connect(database=dbname_postgres, user=username, password=pswd, host=hostname_postgres, port=5432)
+        postgres_database = psycopg2.connect(database=dbname_postgres, user=username, password=pswd,
+                                             host=hostname_postgres, port=5432)
         mongo_connection = pymongo.MongoClient(f"mongodb://{username}:{pswd}@{hostname_mongo}:27017")
         mongo_database = mongo_connection[dbname_mongo]
         if postgres_database and mongo_database is not None:
@@ -169,9 +170,51 @@ def get_team_stats_data():
 
 
 # Insert into postgres data
+def insert_postgres_data(table, create_dict):
+    cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(f"INSERT INTO {table}"
+                   f"({','.join(create_dict.keys())})"
+                   f"VALUES ({', '.join(['%s'] * len(create_dict))}) "
+                   f"RETURNING *;",
+                   tuple(create_dict.values())
+                   )
+    postgres_database.commit()
+    new_record = cursor.fetchone()
+    cursor.close()
+    return new_record
+
+
 # Insert into mongo data
+def insert_mongo_data(entity_list, create_dict):
+    mongo_database[entity_list].insert_one(
+        dict(create_dict)
+    )
+    return create_dict
+
+
+# Insert into similar tables/collections: teams, tracks
+def insert_teams_data(create_dict):
+    mongo_data, postgres_data = split_insert_teams_data(create_dict)
+    inserted_postgres = insert_postgres_data("teams", postgres_data)
+    mongo_data["team_id"] = inserted_postgres["team_id"]
+    inserted_mongo = insert_mongo_data("teams", mongo_data)
+    merged = {**inserted_postgres, **inserted_mongo}
+    return merged
+
+
+def insert_tracks_data(create_dict):
+    mongo_data, postgres_data = split_insert_tracks_data(create_dict)
+    inserted_postgres = insert_postgres_data("tracks", postgres_data)
+    mongo_data["track_id"] = inserted_postgres["track_id"]
+    inserted_mongo = insert_mongo_data("tracks", mongo_data)
+    merged = {**inserted_postgres, **inserted_mongo}
+    return merged
+
+
 # Delete combined data from postgres/mongo
 
+
+# Teams
 @app.get("/api/teams")
 def get_teams():
     return get_combined_data("teams", "team_id")
@@ -183,6 +226,13 @@ def update_teams(team_id: int, updates: TeamUpdate):
     return update_teams_data(team_id, update_dict)
 
 
+@app.post("/api/teams")
+def create_team(body: TeamInsert):
+    body = body.model_dump()
+    return insert_teams_data(body)
+
+
+# Drivers
 @app.get("/api/drivers")
 def get_drivers():
     return get_combined_data("drivers", "driver_id")
@@ -194,6 +244,7 @@ def update_drivers(driver_id: int, updates: DriverUpdate):
     return update_drivers_data(driver_id, update_dict)
 
 
+# Tracks
 @app.get("/api/tracks")
 def get_tracks():
     return get_combined_data("tracks", "track_id")
@@ -205,21 +256,31 @@ def update_tracks(track_id: int, updates: TrackUpdate):
     return update_tracks_data(track_id, update_dict)
 
 
+@app.post("/api/tracks")
+def create_team(body: TrackInsert):
+    body = body.model_dump()
+    return insert_tracks_data(body)
+
+
+# Races
 @app.get("/api/races")
 def get_races():
     return get_races_data()
 
 
+# Results
 @app.get("/api/results")
 def get_results():
     return get_results_data()
 
 
+# Driver stats
 @app.get("/api/driver-stats")
 def get_driver_stats():
     return get_driver_stats_data()
 
 
+# Team stats
 @app.get("/api/team-stats")
 def get_team_stats():
     return get_team_stats_data()
