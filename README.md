@@ -39,3 +39,81 @@ AI assistance was used in the following tasks:
 - Dockerizing the databases https://chatgpt.com/share/68ee707e-b258-8003-87f0-1cb002554cba
 - Frontend https://chatgpt.com/share/68f535bc-eb20-8003-a8ca-b742fb13fe03 (used with modifications)
 - Fastapi https://chatgpt.com/share/68efad7b-bebc-8003-9a49-d336c52a6491
+
+
+## Assignment 4
+Creates 2 database with partly same data: 5 tables/collections in each Postgres and MongoDB.
+<table>
+    <thead>
+        <tr>
+            <th>Table/Collection</th>
+            <th>Database</th>
+            <th>Data model</th>
+            <th>Operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="2">teams</td>
+            <td>Postgres</td>
+            <td><b>team_id</b>, <b>team_name</b>, base_country, principal</td>
+            <td rowspan="2">Select, Update, *Insert, *Delete</td>
+        </tr>
+        <tr>
+            <td>Mongo</td>
+            <td><b>team_id</b>, <b>team_name</b>, staff_number, championship_position</td>
+        </tr>
+        <tr>
+            <td rowspan="2">drivers</td>
+            <td>Postgres</td>
+            <td><b>driver_id</b>, <b>full_name</b>, nationality, team_id</td>
+            <td rowspan="2">Select, Update</td>
+        </tr>
+        <tr>
+            <td>Mongo</td>
+            <td><b>driver_id</b>, <b>full_name</b>, social_media, championship_position</td>
+        </tr>
+        <tr>
+            <td rowspan="2">tracks</td>
+            <td>Postgres</td>
+            <td><b>track_id</b>, <b>track_name</b>, location, country, length_km, laps</td>
+            <td rowspan="2">Select, Update, *Insert, *Delete</td>
+        </tr>
+        <tr>
+            <td>Mongo</td>
+            <td><b>track_id</b>, <b>track_name</b>, lat, lng, record_lap_driver</td>
+        </tr>
+        <tr>
+            <td>races</td>
+            <td>Postgres</td>
+            <td>race_id, track_id, date, season, winner_driver_id</td>
+            <td>Select</td>
+        </tr>
+        <tr>
+            <td>results</td>
+            <td>Postgres</td>
+            <td>result_id, race_id, driver_id, position, points</td>
+            <td>Select</td>
+        </tr>
+        <tr>
+            <td>driver_stats</td>
+            <td>Mongo</td>
+            <td>driver_id, season, avg_finish, podiums, wins, dnfs</td>
+            <td>Select</td>
+        </tr>
+        <tr>
+            <td>team_stats</td>
+            <td>Mongo</td>
+            <td>team_id, season, avg_finish, wins</td>
+            <td>Select</td>
+        </tr>
+    </tbody>
+</table>
+Uses docker, PostgreSQL, MongoDB, Fastapi (python), and React (Javascript).
+
+Data used is Formula-1 drivers and teams performing and tracks used through 2025.
+The races, results, driver stats, and team stats data is imaginary.
+
+### Running
+
+### Resources
