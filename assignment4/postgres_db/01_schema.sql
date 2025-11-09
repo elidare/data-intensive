@@ -36,3 +36,17 @@ CREATE TABLE results (
   position INT,
   points INT
 );
+
+ALTER TABLE results
+DROP CONSTRAINT results_driver_id_fkey,
+ADD CONSTRAINT results_driver_id_fkey
+FOREIGN KEY (driver_id)
+REFERENCES drivers(driver_id)
+ON DELETE SET NULL;
+
+ALTER TABLE races
+DROP CONSTRAINT races_winner_driver_id_fkey,
+ADD CONSTRAINT races_winner_driver_id_fkey
+FOREIGN KEY (winner_driver_id)
+REFERENCES drivers(driver_id)
+ON DELETE SET NULL;

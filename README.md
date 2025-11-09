@@ -57,7 +57,7 @@ Creates 2 database with partly same data: 5 tables/collections in each Postgres 
             <td rowspan="2">teams</td>
             <td>Postgres</td>
             <td><b>team_id</b>, <b>team_name</b>, base_country, principal</td>
-            <td rowspan="2">Select, Update, *Insert, *Delete</td>
+            <td rowspan="2">Select, Update, Insert</td>
         </tr>
         <tr>
             <td>Mongo</td>
@@ -67,7 +67,7 @@ Creates 2 database with partly same data: 5 tables/collections in each Postgres 
             <td rowspan="2">drivers</td>
             <td>Postgres</td>
             <td><b>driver_id</b>, <b>full_name</b>, nationality, team_id</td>
-            <td rowspan="2">Select, Update</td>
+            <td rowspan="2">Select, Update, Delete</td>
         </tr>
         <tr>
             <td>Mongo</td>
@@ -77,7 +77,7 @@ Creates 2 database with partly same data: 5 tables/collections in each Postgres 
             <td rowspan="2">tracks</td>
             <td>Postgres</td>
             <td><b>track_id</b>, <b>track_name</b>, location, country, length_km, laps</td>
-            <td rowspan="2">Select, Update, *Insert, *Delete</td>
+            <td rowspan="2">Select, Update, Insert</td>
         </tr>
         <tr>
             <td>Mongo</td>
@@ -114,7 +114,9 @@ Uses docker, PostgreSQL, MongoDB, Fastapi (python), and React (Javascript).
 Data used is Formula-1 drivers and teams performing and tracks used through 2025.
 The races, results, driver stats, and team stats data is imaginary.
 
-Updates, inserts, and deletions are not made within one transaction so some ansynchronized data could appear.
+Updates, inserts, and deletions are not made within one transaction so some unsynchronized data could appear.
+
+No error handling is done.
 I omitted this part because it is a study assignment.
 
 ### Running

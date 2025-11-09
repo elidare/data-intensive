@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 import pymongo
 from pymongo import ReturnDocument
 import psycopg2
+from psycopg2 import sql
 from psycopg2.extras import RealDictCursor  # to get dict results
 import os
 from dotenv import load_dotenv
@@ -211,8 +212,29 @@ def insert_tracks_data(create_dict):
     return merged
 
 
-# Delete combined data from postgres/mongo
+# Delete from postgres data
+def delete_postgres_data(table, entity_id_name, entity_id):
+    cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
+    cursor.execute(
+        sql.SQL("DELETE FROM {} WHERE {} = %s;").format(
+            sql.Identifier(table), sql.Identifier(entity_id_name)
+        ),
+        (entity_id,)
+    )
+    postgres_database.commit()
+    cursor.close()
 
+
+# Delete from mongo data
+def delete_mongo_data(collection, entity_id_name, entity_id):
+    mongo_database[collection].delete_one({entity_id_name: entity_id})
+
+
+# Delete combined data from postgres/mongo cascading
+def delete_drivers_data(driver_id):
+    delete_mongo_data("drivers", "driver_id", driver_id)
+    delete_mongo_data("driver_stats", "driver_id", driver_id)
+    delete_postgres_data("drivers", "driver_id", driver_id)  # On cascade set null
 
 
 # Teams
@@ -245,6 +267,12 @@ def update_drivers(driver_id: int, updates: DriverUpdate):
     return update_drivers_data(driver_id, update_dict)
 
 
+@app.delete("/api/drivers/{driver_id}")
+def delete_driver(driver_id: int):
+    delete_drivers_data(driver_id)
+    return
+
+
 # Tracks
 @app.get("/api/tracks")
 def get_tracks():
@@ -258,7 +286,7 @@ def update_tracks(track_id: int, updates: TrackUpdate):
 
 
 @app.post("/api/tracks")
-def create_team(body: TrackInsert):
+def create_track(body: TrackInsert):
     body = body.model_dump()
     return insert_tracks_data(body)
 
@@ -285,7 +313,6 @@ def get_driver_stats():
 @app.get("/api/team-stats")
 def get_team_stats():
     return get_team_stats_data()
-
 
 # # Frontend
 # app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend")
