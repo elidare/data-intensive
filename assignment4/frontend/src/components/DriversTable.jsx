@@ -58,6 +58,8 @@ const DriversTable = () => {
             <th className="border px-3 py-2">Driver</th>
             <th className="border px-3 py-2">Nationality</th>
             <th className="border px-3 py-2">Team ID</th>
+            <th className="border px-3 py-2">Social media</th>
+            <th className="border px-3 py-2">Position</th>
             <th className="border px-3 py-2">Actions</th>
           </tr>
         </thead>
@@ -68,6 +70,10 @@ const DriversTable = () => {
               <td className="border px-3 py-2">{driver.full_name}</td>
               <td className="border px-3 py-2">{driver.nationality}</td>
               <td className="border px-3 py-2">{driver.team_id}</td>
+              <td className="border px-3 py-2">
+                  <a href={`https://www.instagram.com/${driver.social_media.replaceAll("@", "")}`} target="_blank">{driver.social_media}</a>
+              </td>
+              <td className="border px-3 py-2">{driver.championship_position}</td>
               <td className="border px-3 py-2">
                   <button
                     className="update-btn"

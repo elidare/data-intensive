@@ -59,6 +59,8 @@ const TeamsTable = () => {
               <th className="border px-3 py-2">Team name</th>
               <th className="border px-3 py-2">Base country</th>
               <th className="border px-3 py-2">Principal</th>
+              <th className="border px-3 py-2">Staff number</th>
+              <th className="border px-3 py-2">Position</th>
               <th className="border px-3 py-2">Actions</th>
             </tr>
           </thead>
@@ -69,6 +71,8 @@ const TeamsTable = () => {
                 <td className="border px-3 py-2">{team.team_name}</td>
                 <td className="border px-3 py-2">{team.base_country}</td>
                 <td className="border px-3 py-2">{team.principal}</td>
+                <td className="border px-3 py-2">{team.staff_number}</td>
+                <td className="border px-3 py-2">{team.championship_position}</td>
                 <td className="border px-3 py-2">
                   <button
                     className="update-btn"

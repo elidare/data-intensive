@@ -63,6 +63,9 @@ const TracksTable = () => {
               <th>Country</th>
               <th>Length (km)</th>
               <th>Laps</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Record lap</th>
               <th className="border px-3 py-2">Actions</th>
             </tr>
           </thead>
@@ -75,6 +78,9 @@ const TracksTable = () => {
                 <td>{track.country}</td>
                 <td>{track.length_km}</td>
                 <td>{track.laps}</td>
+                <td>{track.lat}</td>
+                <td>{track.lng}</td>
+                <td>{track.record_lap_driver}</td>
                 <td className="border px-3 py-2">
                   <button
                     className="update-btn"
