@@ -41,9 +41,9 @@ while True:
 
 
 # Get data from similar tables/collections: teams, drivers, tracks
-def get_postgres_data(table, table_id_name):
+def get_postgres_data(table, entity_id_name):
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
-    cursor.execute(f"SELECT * FROM {table} ORDER BY {table_id_name};")
+    cursor.execute(f"SELECT * FROM {table} ORDER BY {entity_id_name};")
     records = cursor.fetchall()
     cursor.close()
     return [dict(row) for row in records]
@@ -66,16 +66,16 @@ def get_combined_data(collection, entity_id_name):
 
 
 # Update data in similar tables/collections: teams, drivers, tracks
-def update_postgres_data(table, table_id_name, entity_id, update_dict):
+def update_postgres_data(table, entity_id_name, entity_id, update_dict):
     columns_update = []
     for k, v in update_dict.items():
         columns_update.append(f"{k} = '{v}'")
 
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
     if len(columns_update):
-        cursor.execute(f"UPDATE {table} SET {','.join(columns_update)} WHERE {table_id_name} = {entity_id};")
+        cursor.execute(f"UPDATE {table} SET {','.join(columns_update)} WHERE {entity_id_name} = {entity_id};")
         postgres_database.commit()
-    cursor.execute(f"SELECT * FROM {table} WHERE {table_id_name} = {entity_id}")
+    cursor.execute(f"SELECT * FROM {table} WHERE {entity_id_name} = {entity_id}")
     updated_record = cursor.fetchone()
     cursor.close()
     return updated_record
