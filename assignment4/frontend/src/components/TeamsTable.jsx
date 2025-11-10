@@ -26,13 +26,26 @@ const TeamsTable = () => {
     const teamName = selectedTeam.team_name.trim()
     const baseCountry = selectedTeam.base_country.trim()
     const principal = selectedTeam.principal.trim()
+    const staffNumber = selectedTeam.staff_number.toString().trim()
+    const position = selectedTeam.championship_position.toString().trim()
 
-    if (!(teamName && baseCountry && principal)) {
+    if (!(teamName && baseCountry && principal && staffNumber && position)) {
         alert('Please fill in all the inputs')
         return
     }
 
-    const updateData = { team_name: teamName, base_country: baseCountry, principal: principal }
+    if (Number(staffNumber) < 0 || Number(position) < 0) {
+        alert('Please use positive numbers')
+        return
+    }
+
+    const updateData = {
+        team_name: teamName,
+        base_country: baseCountry,
+        principal: principal,
+        staff_number: staffNumber,
+        championship_position: position
+    }
     apiService.updateTeam(selectedTeam.team_id, updateData).then((team) => {
       setTeams((prevTeams) =>
           prevTeams.map((t) =>
@@ -114,6 +127,24 @@ const TeamsTable = () => {
                 type="text"
                 name="principal"
                 value={selectedTeam.principal}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Staff number:
+              <input
+                type="text"
+                name="staff_number"
+                value={selectedTeam.staff_number}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Championship position:
+              <input
+                type="text"
+                name="championship_position"
+                value={selectedTeam.championship_position}
                 onChange={handleChange}
               />
             </label>
