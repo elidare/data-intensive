@@ -26,14 +26,14 @@ const DriversTable = () => {
     const fullName = selectedDriver.full_name.trim()
     const nationality = selectedDriver.nationality.trim()
     const socialMedia = selectedDriver.social_media.trim()
-    const position = selectedDriver.championship_position.toString().trim()
+    const position = parseInt(selectedDriver.championship_position.toString().trim())
 
-    if (!(fullName && nationality && socialMedia && position)) {
+    if (!(fullName && nationality && socialMedia && !isNaN(position))) {
         alert('Please fill in all the inputs')
         return
     }
 
-    if (Number(position) < 0) {
+    if (position < 0) {
         alert('Please use positive numbers')
         return
     }

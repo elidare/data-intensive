@@ -26,15 +26,15 @@ const TeamsTable = () => {
     const teamName = selectedTeam.team_name.trim()
     const baseCountry = selectedTeam.base_country.trim()
     const principal = selectedTeam.principal.trim()
-    const staffNumber = selectedTeam.staff_number.toString().trim()
-    const position = selectedTeam.championship_position.toString().trim()
+    const staffNumber = parseInt(selectedTeam.staff_number.toString().trim())
+    const position = parseInt(selectedTeam.championship_position.toString().trim())
 
-    if (!(teamName && baseCountry && principal && staffNumber && position)) {
+    if (!(teamName && baseCountry && principal && !isNaN(staffNumber) && !isNaN(position))) {
         alert('Please fill in all the inputs')
         return
     }
 
-    if (Number(staffNumber) < 0 || Number(position) < 0) {
+    if (staffNumber < 0 || position < 0) {
         alert('Please use positive numbers')
         return
     }
