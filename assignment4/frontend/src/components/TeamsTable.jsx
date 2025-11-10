@@ -39,21 +39,28 @@ const TeamsTable = () => {
         return
     }
 
-    const updateData = {
+    const data = {
         team_name: teamName,
         base_country: baseCountry,
         principal: principal,
         staff_number: staffNumber,
         championship_position: position
     }
-    apiService.updateTeam(selectedTeam.team_id, updateData).then((team) => {
-      setTeams((prevTeams) =>
-          prevTeams.map((t) =>
-            t.team_id === selectedTeam.team_id ? team : t
+    if (selectedTeam.team_id) {
+        apiService.updateTeam(selectedTeam.team_id, data).then((team) => {
+          setTeams((prevTeams) =>
+              prevTeams.map((t) =>
+                t.team_id === selectedTeam.team_id ? team : t
+              )
           )
-      )
-      setShowModal(false);
-    })
+          setShowModal(false);
+        })
+    } else {
+        apiService.createTeam(data).then((newTeam) => {
+          setTeams((prevTeams) => [...prevTeams, newTeam])
+          setShowModal(false)
+        })
+    }
   }
 
   const closeModal = () => {
@@ -98,6 +105,21 @@ const TeamsTable = () => {
             ))}
           </tbody>
         </table>
+        <button
+          className="create-btn mt-4"
+          onClick={() => {
+            setSelectedTeam({
+              team_name: '',
+              base_country: '',
+              principal: '',
+              staff_number: '',
+              championship_position: '',
+            })
+            setShowModal(true)
+          }}
+        >
+          Create new team
+        </button>
       </div>
       {showModal && selectedTeam && (
         <div className="modal-overlay">

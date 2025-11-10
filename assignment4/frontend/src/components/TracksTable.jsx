@@ -42,7 +42,7 @@ const TracksTable = () => {
         return
     }
 
-    const updateData = {
+    const data = {
         country: country,
         laps: laps,
         length_km: length,
@@ -52,14 +52,21 @@ const TracksTable = () => {
         lng: lng,
         record_lap_driver: record
     }
-    apiService.updateTrack(selectedTrack.track_id, updateData).then((track) => {
-      setTracks((prevTracks) =>
-          prevTracks.map((t) =>
-            t.track_id === selectedTrack.track_id ? track : t
+    if (selectedTrack.track_id) {
+        apiService.updateTrack(selectedTrack.track_id, data).then((track) => {
+          setTracks((prevTracks) =>
+              prevTracks.map((t) =>
+                t.track_id === selectedTrack.track_id ? track : t
+              )
           )
-      )
-      setShowModal(false);
-    })
+          setShowModal(false);
+        })
+    } else {
+        apiService.createTrack(data).then((newTrack) => {
+          setTracks((prevTracks) => [...prevTracks, newTrack])
+          setShowModal(false)
+        })
+    }
   }
 
   const closeModal = () => {
@@ -110,6 +117,24 @@ const TracksTable = () => {
             ))}
           </tbody>
         </table>
+        <button
+          className="create-btn mt-4"
+          onClick={() => {
+            setSelectedTrack({
+                country: '',
+                laps: '',
+                length_km: '',
+                location: '',
+                track_name: '',
+                lat: '',
+                lng: '',
+                record_lap_driver: ''
+            })
+            setShowModal(true)
+          }}
+        >
+          Create new track
+        </button>
       </div>
       {showModal && selectedTrack && (
         <div className="modal-overlay">

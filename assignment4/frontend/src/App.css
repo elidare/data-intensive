@@ -40,7 +40,8 @@ tr:hover {
 }
 
 /* ---------- Update Button ---------- */
-.update-btn {
+.update-btn,
+.create-btn {
   background-color: #2563eb;
   color: white;
   border: none;
@@ -50,7 +51,12 @@ tr:hover {
   transition: background-color 0.2s;
 }
 
-.update-btn:hover {
+.create-btn {
+  margin-top: 12px;
+}
+
+.update-btn:hover,
+.create-btn:hover {
   background-color: #1e40af;
 }
 
