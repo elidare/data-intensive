@@ -24,17 +24,34 @@ const TracksTable = () => {
 
   const handleSave = () => {
     const country = selectedTrack.country.trim()
-    const laps = parseInt(selectedTrack.laps)
-    const length = parseFloat(selectedTrack.length_km)
+    const laps = parseInt(selectedTrack.laps.toString().trim())
+    const length = parseFloat(selectedTrack.length_km.toString().trim())
     const location = selectedTrack.location.trim()
     const trackName = selectedTrack.track_name.trim()
+    const lat = parseFloat(selectedTrack.lat.toString().trim())
+    const lng = parseFloat(selectedTrack.lng.toString().trim())
+    const record = selectedTrack.record_lap_driver.trim()
 
-    if (!(country && location && trackName && laps && length)) {
+    if (!(country && location && trackName && !isNaN(laps) && !isNaN(length) && !isNaN(lat) && !isNaN(lng) && record)) {
         alert('Please fill in all the inputs')
         return
     }
 
-    const updateData = { country: country, laps: laps, length_km: length, location: location, track_name: trackName }
+    if (laps < 0 || length < 0) {
+        alert('Please use positive numbers for laps and length')
+        return
+    }
+
+    const updateData = {
+        country: country,
+        laps: laps,
+        length_km: length,
+        location: location,
+        track_name: trackName,
+        lat: lat,
+        lng: lng,
+        record_lap_driver: record
+    }
     apiService.updateTrack(selectedTrack.track_id, updateData).then((track) => {
       setTracks((prevTracks) =>
           prevTracks.map((t) =>
@@ -96,7 +113,7 @@ const TracksTable = () => {
       </div>
       {showModal && selectedTrack && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal wide-modal">
             <h3 className="modal-title">Edit track</h3>
             <label>
               Country:
@@ -107,24 +124,26 @@ const TracksTable = () => {
                 onChange={handleChange}
               />
             </label>
-            <label>
-              Laps:
-              <input
-                type="text"
-                name="laps"
-                value={selectedTrack.laps}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Length:
-              <input
-                type="text"
-                name="length_km"
-                value={selectedTrack.length_km}
-                onChange={handleChange}
-              />
-            </label>
+            <div className="form-row">
+              <label>
+                Laps:
+                <input
+                  type="text"
+                  name="laps"
+                  value={selectedTrack.laps}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Length:
+                <input
+                  type="text"
+                  name="length_km"
+                  value={selectedTrack.length_km}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
             <label>
               Location:
               <input
@@ -140,6 +159,35 @@ const TracksTable = () => {
                 type="text"
                 name="track_name"
                 value={selectedTrack.track_name}
+                onChange={handleChange}
+              />
+            </label>
+            <div className="form-row">
+              <label>
+                Latitude:
+                <input
+                  type="text"
+                  name="lat"
+                  value={selectedTrack.lat}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Longitude:
+                <input
+                  type="text"
+                  name="lng"
+                  value={selectedTrack.lng}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            <label>
+              Record lap driver:
+              <input
+                type="text"
+                name="record_lap_driver"
+                value={selectedTrack.record_lap_driver}
                 onChange={handleChange}
               />
             </label>
