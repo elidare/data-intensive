@@ -41,7 +41,8 @@ tr:hover {
 
 /* ---------- Update Button ---------- */
 .update-btn,
-.create-btn {
+.create-btn,
+.delete-btn {
   background-color: #2563eb;
   color: white;
   border: none;
@@ -55,9 +56,18 @@ tr:hover {
   margin-top: 12px;
 }
 
+.delete-btn {
+  margin-left: 12px;
+  background-color: #dc2626;
+}
+
 .update-btn:hover,
 .create-btn:hover {
   background-color: #1e40af;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
 }
 
 /* ---------- Modal Styling ---------- */

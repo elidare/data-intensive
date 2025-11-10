@@ -29,7 +29,7 @@ const RacesTable = () => {
                 <td>{race.race_id}</td>
                 <td>{race.date}</td>
                 <td>{race.track_name}</td>
-                <td>{race.full_name}</td>
+                <td>{race.full_name || '—'}</td>
               </tr>
             ))}
           </tbody>

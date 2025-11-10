@@ -31,8 +31,8 @@ const ResultsTable = () => {
                     <td>{resItem.date}</td>
                     <td>{resItem.track_name}</td>
                     <td>{resItem.position}</td>
-                    <td>{resItem.full_name}</td>
-                    <td>{resItem.team_name}</td>
+                    <td>{resItem.full_name || '—'}</td>
+                    <td>{resItem.team_name || '—'}</td>
                     <td>{resItem.points}</td>
                   </tr>
                 ))}

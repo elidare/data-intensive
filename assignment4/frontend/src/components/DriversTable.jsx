@@ -17,6 +17,16 @@ const DriversTable = () => {
     setShowModal(true);
   }
 
+  const handleDeleteClick = (driver) => {
+    apiService.deleteDriver(driver.driver_id).then(() => {
+      setDrivers((prevDrivers) =>
+          prevDrivers.filter((d) =>
+            d.driver_id !== driver.driver_id
+          )
+      )
+    })
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setSelectedDriver((prev) => ({ ...prev, [name]: value }))
@@ -92,6 +102,12 @@ const DriversTable = () => {
                     onClick={() => handleUpdateClick(driver)}
                   >
                     Update
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteClick(driver)}
+                  >
+                    Delete
                   </button>
                 </td>
             </tr>
