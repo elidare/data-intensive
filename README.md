@@ -120,5 +120,32 @@ No error handling is done.
 I omitted this part because it is a study assignment.
 
 ### Running
+Clone the repo and run docker-compose building the images
+```
+git clone git@github.com:elidare/data-intensive.git
+cd data-intensive/assignment4/
+docker-compose -f docker-compose.yaml up -d --build
+```
+
+The app will be available at http://localhost:8000/.
+
+To shut down, run `docker-compose down`.
+
+To access the databases through docker, you can use
+```
+docker exec -it postgres_db psql -U user -d database_postgres
+docker exec -it mongo_db mongosh -u user -p password
+```
 
 ### Resources
+I acknowledge the use of OpenAI. (2025). ChatGPT (v4) [Large language model]. https://openai.com
+to generate materials for the code of this assessment.
+
+Assignment 4 code is based on Assignment 3, so every AI mentioned there applies in this part as well.
+
+Additionally, AI assistance was used in the following tasks:
+- Data generation for MongoDB https://chatgpt.com/share/69078d84-8d28-8003-9046-93628af34b91 
+- Dockerizing MongDB https://chatgpt.com/share/6907bb05-39c8-8003-962b-7c988c2be348 
+- Retrieving combined data on the backend https://chatgpt.com/share/6908e57a-1968-8003-9402-8d99614b0daf 
+- Inserting and deleting https://chatgpt.com/share/6912105a-0598-8003-9593-2e3b85b54934 
+- Frontend updates https://chatgpt.com/share/6911dee4-647c-8003-91c0-c21ad4a67848
