@@ -25,13 +25,25 @@ const DriversTable = () => {
   const handleSave = () => {
     const fullName = selectedDriver.full_name.trim()
     const nationality = selectedDriver.nationality.trim()
+    const socialMedia = selectedDriver.social_media.trim()
+    const position = selectedDriver.championship_position.toString().trim()
 
-    if (!(fullName && nationality)) {
+    if (!(fullName && nationality && socialMedia && position)) {
         alert('Please fill in all the inputs')
         return
     }
 
-    const updateData = { full_name: fullName, nationality: nationality }
+    if (Number(position) < 0) {
+        alert('Please use positive numbers')
+        return
+    }
+
+    const updateData = {
+        full_name: fullName,
+        nationality: nationality,
+        social_media: socialMedia,
+        championship_position: position
+    }
     apiService.updateDriver(selectedDriver.driver_id, updateData).then((driver) => {
       setDrivers((prevDrivers) =>
           prevDrivers.map((d) =>
@@ -92,20 +104,11 @@ const DriversTable = () => {
           <div className="modal">
             <h3 className="modal-title">Edit driver</h3>
             <label>
-              First name:
+              Name:
               <input
                 type="text"
-                name="first_name"
-                value={selectedDriver.first_name}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Last name:
-              <input
-                type="text"
-                name="last_name"
-                value={selectedDriver.last_name}
+                name="full_name"
+                value={selectedDriver.full_name}
                 onChange={handleChange}
               />
             </label>
@@ -115,6 +118,24 @@ const DriversTable = () => {
                 type="text"
                 name="nationality"
                 value={selectedDriver.nationality}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Social media:
+              <input
+                type="text"
+                name="social_media"
+                value={selectedDriver.social_media}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Position:
+              <input
+                type="text"
+                name="championship_position"
+                value={selectedDriver.championship_position}
                 onChange={handleChange}
               />
             </label>

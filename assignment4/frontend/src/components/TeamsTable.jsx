@@ -140,7 +140,7 @@ const TeamsTable = () => {
               />
             </label>
             <label>
-              Championship position:
+              Position:
               <input
                 type="text"
                 name="championship_position"
