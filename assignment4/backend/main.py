@@ -314,5 +314,6 @@ def get_driver_stats():
 def get_team_stats():
     return get_team_stats_data()
 
+
 # # Frontend
-# app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend")
