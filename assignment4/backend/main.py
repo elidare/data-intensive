@@ -125,7 +125,7 @@ def get_races_data():
     cursor = postgres_database.cursor(cursor_factory=RealDictCursor)
     cursor.execute("SELECT r.race_id, r.date, t.track_name, d.full_name FROM races r\n"
                    "JOIN tracks t ON t.track_id = r.track_id\n"
-                   "JOIN drivers d ON d.driver_id = r.winner_driver_id\n"
+                   "LEFT JOIN drivers d ON d.driver_id = r.winner_driver_id\n"
                    "ORDER BY r.race_id;")
     records = cursor.fetchall()
     cursor.close()
@@ -139,8 +139,8 @@ def get_results_data():
                    "FROM results rt\n"
                    "JOIN races r ON r.race_id = rt.race_id\n"
                    "JOIN tracks t ON r.track_id = t.track_id\n"
-                   "JOIN drivers d ON d.driver_id = rt.driver_id\n"
-                   "JOIN teams tm ON d.team_id = tm.team_id\n"
+                   "LEFT JOIN drivers d ON d.driver_id = rt.driver_id\n"
+                   "LEFT JOIN teams tm ON d.team_id = tm.team_id\n"
                    "ORDER BY rt.result_id;")
     records = cursor.fetchall()
     cursor.close()
