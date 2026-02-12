@@ -5,15 +5,16 @@ on:
   pull_request:
     branches: [main, master]
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install deps
-        run: npm ci
-      - name: lint
-        run: npm run lint
+  # TODO: Add lint for frontend, lint for backend?
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Install deps
+  #       run: npm ci
+  #     - name: lint
+  #       run: npm run lint
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -22,6 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+      # Go to assignment3 - Llet's see if it is working
+      - name: Go to assignment3
+        run: cd assignment3
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
