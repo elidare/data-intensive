@@ -23,9 +23,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      # Go to assignment3 - Llet's see if it is working
-      - name: Go to assignment3
+      # Go to assignment3 - Let's see if it is working
+      - name: Go to 
+        run: pwd
         run: cd assignment3
+        run: pwd
+        run: ls -l
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
